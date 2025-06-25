@@ -4,7 +4,7 @@ import './page.css';
 
 const Page = () => {
   return (
-    <div className="board-container-wrapper bg-[url('/image/anime-background.jpg')] bg-cover bg-center bg-no-repeat h-screen">
+    <div className="board-container-wrapper bg-[url('/image/bg.png')] bg-cover bg-center bg-no-repeat h-screen">
       <div className="board-container glass-effect">
         <Board />
       </div>
