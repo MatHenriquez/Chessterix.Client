@@ -20,6 +20,9 @@ const config: Config = {
         },
         bone: {
           '500': '#988D87'
+        },
+        wood: {
+          '700': '#47240D'
         }
       },
       fontFamily: {

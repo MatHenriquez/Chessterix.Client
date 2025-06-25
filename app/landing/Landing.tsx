@@ -32,43 +32,40 @@ const Landing = ({
     <section
       className="
         landing-wrapper
-        bg-[url(/image/anime-background.jpg)] bg-cover bg-center bg-no-repeat
+        bg-[url(/image/bg.png)] bg-center bg-cover bg-no-repeat
         h-screen w-screen overflow-hidden
-        flex flex-col items-center justify-center
+        flex flex-col items-center justify-center bg-kimono-900
       "
       data-cy="landing-container"
     >
       <div
-        className="
-          flex flex-col items-center justify-center md:justify-between
-          w-full h-[90vh] md:h-[95%] max-w-xl
-          text-center mx-auto
-          shadow-inner shadow-bone-500/50
-          bg-red-950/20 rounded-md
-          p-4
-        "
+        className="flex flex-col items-center justify-center md:justify-between
+      w-full h-[90vh] md:h-[95%] max-w-xl
+      text-center mx-auto
+      shadow-inner shadow-bone-500/50
+      bg-wood-700/60 rounded-md
+      p-4
+      gap-4"
         data-cy="landing-content"
       >
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <Message />
         </div>
 
-        <div className="w-4/5 md:w-96 mb-16 md:mb-0 md:mt-8">
-          <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-6 items-center justify-center">
-            <AuthButton
-              showAuthModal={showLoginModal}
-              setShowAuthModal={setShowLoginModal}
-              text="Sign In"
-            />
-            <AuthButton
-              showAuthModal={showSignUpModal}
-              setShowAuthModal={setShowSignUpModal}
-              text="Sign Up"
-            />
-          </div>
-          <div className="mt-4">
-            <GuestLink />
-          </div>
+        <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-6 items-center justify-center md:mt-40">
+          <AuthButton
+            showAuthModal={showLoginModal}
+            setShowAuthModal={setShowLoginModal}
+            text="Sign In"
+          />
+          <AuthButton
+            showAuthModal={showSignUpModal}
+            setShowAuthModal={setShowSignUpModal}
+            text="Sign Up"
+          />
+        </div>
+        <div className="mb-12 md:mb-24">
+          <GuestLink />
         </div>
       </div>
     </section>
@@ -77,10 +74,10 @@ const Landing = ({
 
 const Message = () => (
   <p
-    className="max-w-lg inline-block align-middle py-2 px-12 lg:mb-8 lg:mt-0 text-9xl lg:text-title font-stranger shadow-inner h-fit font-extrabold text-white"
+    className="max-w-lg inline-block align-middle py-2 px-12 lg:mb-8 lg:mt-0 text-9xl lg:text-title font-stranger shadow-inner h-fit font-extrabold text-bone-500"
     style={{
-      WebkitTextStroke: '1px black',
-      textShadow: '2px 2px 2px rgba(255, 255, 255, 0.3)',
+      WebkitTextStroke: '0.6px white',
+      textShadow: '2px 2px 2px white',
       padding: '10px',
       fontSize: '10rem'
     }}
@@ -88,10 +85,10 @@ const Message = () => (
   >
     Welcome to{' '}
     <span
-      className="text-kimono-200"
+      className="text-red-main block mt-4"
       style={{
-        WebkitTextStroke: '2px black',
-        textShadow: '5px 5px 5px rgba(255, 0, 0, 0.3)',
+        WebkitTextStroke: '0.5px red',
+        textShadow: '4px 4px 4px white',
         padding: '10px',
         fontSize: '15rem'
       }}
