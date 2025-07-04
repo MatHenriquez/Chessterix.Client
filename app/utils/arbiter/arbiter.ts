@@ -7,6 +7,8 @@ import {
   getQueenMoves,
   getRookMoves
 } from './getMoves';
+import { IMoveParams } from './interfaces/IMoveParams';
+import { movePawn, movePiece } from './movePawn';
 
 const arbiter = {
   getRegularMoves: function (
@@ -37,10 +39,19 @@ const arbiter = {
     }
 
     if (piece.endsWith('p')) {
-      return [...getPawnMoves(rank, fileIndex, position, piece), ...getPawnCaptures(rank, fileIndex, position, piece, previousPosition)];
+      return [
+        ...getPawnMoves(rank, fileIndex, position, piece),
+        ...getPawnCaptures(rank, fileIndex, position, piece, previousPosition)
+      ];
     }
 
     return [];
+  },
+
+  performMove: function ({ position, piece, rank, file, x, y }: IMoveParams) {
+    if (piece.endsWith('p'))
+      return movePawn({ position, piece, rank, file, x, y });
+    else return movePiece({ position, piece, rank, file, x, y });
   }
 };
 
