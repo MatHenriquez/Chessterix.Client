@@ -9,7 +9,10 @@ export default function Providers({
 }: Readonly<{ children: React.ReactNode }>) {
   const initialState: State = {
     position: initGameState.position,
-    turn: initGameState.turn
+    turn: initGameState.turn,
+    promotionSquare: null,
+    status: 'onGoing',
+    movesList: []
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
