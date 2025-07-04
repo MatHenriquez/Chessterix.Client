@@ -1,10 +1,17 @@
 import actionTypes from '../actionTypes';
 
-export const makeNewMove = ({ newPosition }: { newPosition: string[][][] }) => {
+export const makeNewMove = ({
+  newPosition,
+  newMove
+}: {
+  newPosition: string[][][];
+  newMove: string;
+}) => {
   return {
     type: actionTypes.NEW_MOVE,
     payload: {
-      position: newPosition
+      position: newPosition,
+      newMove
     }
   };
 };
@@ -25,4 +32,4 @@ export const clearCandidateMoves = () => {
       candidateMoves: []
     }
   };
-}
+};
