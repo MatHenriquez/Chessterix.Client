@@ -1,6 +1,6 @@
 import React from 'react';
 import Board from './components/Board';
-import './page.css';
+import './styles/page.css';
 
 const Page = () => {
   return (

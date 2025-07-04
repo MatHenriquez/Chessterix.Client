@@ -9,7 +9,7 @@ export const createInitialPosition = () => {
   return position;
 };
 
-export const copyPosition = (position: string[][]) : string[][] => {
+export const copyPosition = (position: string[][]): string[][] => {
   const newPosition = new Array(8).fill('').map(() => new Array(8).fill(''));
 
   for (let i = 0; i < 8; i++) {
@@ -20,3 +20,47 @@ export const copyPosition = (position: string[][]) : string[][] => {
 
   return newPosition;
 };
+
+export const getNewMoveNotation = ({
+  piece,
+  rank,
+  file,
+  x,
+  y,
+  position,
+  promotesTo
+}: {
+  piece: string;
+  rank: number;
+  file: number;
+  x: number;
+  y: number;
+  position: string[][];
+  promotesTo?: string;
+}) => {
+  let note = '';
+
+  rank = Number(rank);
+  file = Number(file);
+  if (piece[1] === 'k' && Math.abs(file - y) === 2) {
+    if (file < y) return 'O-O';
+    else return 'O-O-O';
+  }
+
+  if (piece[1] !== 'p') {
+    note += piece[1].toUpperCase();
+    if (position[x][y]) {
+      note += 'x';
+    }
+  } else if (rank !== x && file !== y) {
+    note += getCharacter(file + 1) + 'x';
+  }
+
+  note += getCharacter(y + 1) + (x + 1);
+
+  if (promotesTo) note += '=' + promotesTo.toUpperCase();
+
+  return note;
+};
+
+export const getCharacter = (file: number) => String.fromCharCode(file + 96);

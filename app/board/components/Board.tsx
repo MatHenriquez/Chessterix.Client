@@ -6,6 +6,8 @@ import Ranks from './Ranks';
 import Files from './Files';
 import Pieces from './Pieces';
 import { useAppContext } from '@/contexts/Context';
+import Popup from './Popup';
+import PromotionBox from './PromotionBox';
 
 const Board = () => {
   const ROWS_AND_COLUMNS_NUMBER = 8;
@@ -57,6 +59,9 @@ const Board = () => {
         ))}
       </div>
       <Pieces />
+      <Popup>
+        <PromotionBox onClosePopup={() => {}} />
+      </Popup>
       <Files files={files} />
     </div>
   );

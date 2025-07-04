@@ -1,0 +1,57 @@
+.promotion-choices {
+    height: 12.5%;
+}
+
+.popup--inner.promotion-choices {
+    position: relative;
+    display: flex;
+    background: white;
+    border: 2px solid var(--dark-tile);
+    border-radius: 5px;
+    width: 300px;
+    height: 80px;
+    padding: 5px;
+    gap: 2px;
+}
+
+.popup--inner.promotion-choices .close-button {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: white;
+    border: 2px solid var(--dark-tile);
+    border-radius: 50%;
+    color: var(--dark-tile);
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.popup--inner.promotion-choices .close-button:hover {
+    background: var(--dark-tile);
+    color: white;
+}
+
+.promotion-choices .piece {
+    flex: 1;
+    height: 100%;
+    border: 2px solid var(--dark-tile);
+    cursor: pointer;
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 70%;
+}
+
+.promotion-choices .piece:hover {
+    box-shadow: 0 0 0 3px var(--dark-tile) inset;
+    transform: scale(1.05);
+}
