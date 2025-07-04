@@ -1,10 +1,10 @@
 import React from 'react';
 import './styles/landing.css';
-import Message from './components/Message';
-import GuestLink from './components/GuestLink';
-import FloatingBubbles from './components/FloatingBubbles';
-import AuthButtonGroup from './components/AuthButtonGroup';
-import AuthModalGroup from './components/AuthModalGroup';
+import Message from '../components/Message';
+import GuestLink from '../components/GuestLink';
+import FloatingBubbles from '../components/FloatingBubbles';
+import AuthButtonGroup from '../components/AuthButtonGroup';
+import AuthModalGroup from '../components/AuthModalGroup';
 
 type Props = {
   showLoginModal: boolean;
