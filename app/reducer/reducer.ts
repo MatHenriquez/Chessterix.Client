@@ -28,7 +28,10 @@ function reducer(state: State, action: Action): State {
       const newMove = (action.payload as MoveAction).newMove;
 
       const currentMovesList = movesList || [];
-      const updatedMovesList = newMove !== undefined ? [...currentMovesList, newMove] : currentMovesList;
+      const updatedMovesList =
+        newMove !== undefined
+          ? [...currentMovesList, newMove]
+          : currentMovesList;
 
       return {
         ...state,
@@ -67,6 +70,14 @@ function reducer(state: State, action: Action): State {
         ...state,
         status: STATUS.ONGOING as 'onGoing',
         promotionSquare: null
+      };
+    }
+
+    case actionTypes.CAN_CASTLE: {
+      return {
+        ...state,
+        castleDirection: (action.payload as { castleDirection: { w: string; b: string } })
+          .castleDirection
       };
     }
 

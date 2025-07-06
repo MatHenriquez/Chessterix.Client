@@ -1,5 +1,5 @@
-import SignInModal from '@/sign-in/SignInModal';
-import SignUpModal from '@/sign-up/SignUpModal';
+import SignInModal from '@/components/SignInModal';
+import SignUpModal from '@/components/SignUpModal';
 import React, { FC } from 'react';
 
 type AuthButtonProps = {

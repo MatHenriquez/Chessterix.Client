@@ -12,7 +12,8 @@ export default function Providers({
     turn: initGameState.turn,
     promotionSquare: null,
     status: 'onGoing',
-    movesList: []
+    movesList: [],
+    castleDirection: { w: 'both', b: 'both' }
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -26,6 +27,6 @@ export default function Providers({
   );
 
   return (
-    <AppContext.Provider value={providerState}>{children}</AppContext.Provider>
+    <AppContext.Provider value={providerState} > {children}</AppContext.Provider >
   );
 }
