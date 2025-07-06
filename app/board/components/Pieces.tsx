@@ -6,6 +6,9 @@ import { useAppContext } from '@/contexts/Context';
 import { clearCandidateMoves, makeNewMove } from '@/reducer/actions/move';
 import arbiter from '@/utils/arbiter/arbiter';
 import { openPromotion } from '@/reducer/actions/popup';
+import { updateCastling } from '@/reducer/actions/game';
+import { getCastlingDirections } from '@/utils/arbiter/getMoves';
+import { getNewMoveNotation } from '../helpers/position';
 
 const Pieces: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,26 +17,26 @@ const Pieces: FC = () => {
 
   const currentPosition = state.position[state.position.length - 1];
 
-const openPromotionBox = ({
-  rank,
-  file,
-  x,
-  y
-}: {
-  rank: number;
-  file: number;
-  x: number;
-  y: number;
-}) => {
-  dispatch(
-    openPromotion({
-      rank: Number(rank),  
-      file: Number(file),
-      x: Number(x), 
-      y: Number(y)
-    })
-  );
-};
+  const openPromotionBox = ({
+    rank,
+    file,
+    x,
+    y
+  }: {
+    rank: number;
+    file: number;
+    x: number;
+    y: number;
+  }) => {
+    dispatch(
+      openPromotion({
+        rank: Number(rank),
+        file: Number(file),
+        x: Number(x),
+        y: Number(y)
+      })
+    );
+  };
 
   const calculateCoordinates = (
     e: React.MouseEvent<HTMLDivElement>
@@ -51,50 +54,64 @@ const openPromotionBox = ({
     return [y, x];
   };
 
-const move = (e: React.DragEvent<HTMLDivElement>) => {
-  const [rankIndex, fileIndex] = calculateCoordinates(e);
+const updateCastlingState = ({
+  piece,
+  file,
+  rank,
+}: { piece: string; file: number; rank: number }) => {
+  const currentCastleDirection = state.castleDirection;
+  
+  const direction = getCastlingDirections({
+    castleDirection: currentCastleDirection,
+    piece,
+    file,
+    rank
+  });
 
-  const [piece, rankStr, fileStr] = e.dataTransfer.getData('text').split(',');
-  const rank = Number(rankStr);
-  const file = Number(fileStr);
+  const kingColor = piece.startsWith('w') ? 'w' : 'b';
+  const newCastleDirection = {
+    ...currentCastleDirection,
+    [kingColor]: direction
+  };
 
-  const isValidMove = state.candidateMoves?.find(
-    (m) => m[0] === rankIndex && m[1] === fileIndex
-  );
-
-  if (isValidMove) {
-    const isPawnPromotion = (piece === 'wp' && rankIndex === 7) || 
-                           (piece === 'bp' && rankIndex === 0);
-    
-    if (isPawnPromotion) {
-      openPromotionBox({ 
-        rank, 
-        file, 
-        x: rankIndex,
-        y: fileIndex
-      });
-      dispatch(clearCandidateMoves());
-      return;
-    }
-
-    const newPosition = arbiter.performMove({
-      position: currentPosition,
-      piece,
-      rank,
-      file,
-      x: rankIndex,
-      y: fileIndex
-    });
-    
-    const newMove = `${piece}${String.fromCharCode(97 + file)}${
-      rank + 1
-    }-${String.fromCharCode(97 + fileIndex)}${rankIndex + 1}`;
-    
-    dispatch(makeNewMove({ newPosition: [newPosition], newMove }));
+  if (direction) {
+    dispatch(updateCastling(newCastleDirection));
   }
+}
 
-  dispatch(clearCandidateMoves());
-};
+  const move = (e: React.DragEvent<HTMLDivElement>) => {
+    const [x, y] = calculateCoordinates(e)
+    const [piece, rank, file] = e.dataTransfer.getData("text").split(',')
+
+    if (state.candidateMoves?.find(m => m[0] === x && m[1] === y)) {
+
+      if ((piece === 'wp' && x === 7) || (piece === 'bp' && x === 0)) {
+        openPromotionBox({ rank: Number(rank), file: Number(file), x, y })
+        return
+      }
+      if (piece.endsWith('r') || piece.endsWith('k')) {
+        updateCastlingState({ piece, file: Number(file), rank: Number(rank) })
+      }
+      const newPosition = arbiter.performMove({
+        position: currentPosition,
+        piece,
+        rank: Number(rank),
+        file: Number(file),
+        x,
+        y
+      })
+      const newMove = getNewMoveNotation({
+        piece,
+        rank: Number(rank),
+        file: Number(file),
+        x,
+        y,
+        position: currentPosition,
+      })
+      dispatch(makeNewMove({ newPosition: [newPosition], newMove }))
+    }
+    dispatch(clearCandidateMoves())
+  }
 
   const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
