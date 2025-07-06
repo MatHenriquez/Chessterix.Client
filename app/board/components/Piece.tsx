@@ -12,10 +12,9 @@ type PieceProps = {
 
 const Piece: FC<PieceProps> = ({ piece, fileIndex, rank }) => {
   const { state, dispatch } = useAppContext();
-  const { turn, position } = state;
+  const { turn, position, castleDirection } = state;
 
   const currentPosition = position[position.length - 1];
-  const previousPosition = position[position.length - 2];
 
   const onDragStart = (e: DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
@@ -25,13 +24,14 @@ const Piece: FC<PieceProps> = ({ piece, fileIndex, rank }) => {
     }, 0);
 
     if (turn.startsWith(piece[0])) {
-      const candidateMoves = arbiter.getRegularMoves(
-        rank,
-        fileIndex,
-        currentPosition,
+      const candidateMoves = arbiter.getValidMoves({
+        position: currentPosition,
+        prevPosition: position[position.length - 2],
+        castleDirection: castleDirection[turn[0] as 'w' | 'b'],
         piece,
-        previousPosition
-      );
+        file: fileIndex,
+        rank
+      });
 
       dispatch(generateCandidateMoves(candidateMoves));
     }
