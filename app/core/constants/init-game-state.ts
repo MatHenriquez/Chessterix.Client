@@ -13,5 +13,9 @@ export const initGameState = {
   turn: turns.WHITE,
   candidateMoves: [] as number[][],
   status: STATUS.ONGOING,
-  promotionSquare: null
+  promotionSquare: null,
+  castleDirection: {
+    w: 'both',
+    b: 'both'
+  }
 };

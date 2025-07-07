@@ -12,6 +12,10 @@ export interface State {
   } | null;
   status: 'onGoing' | 'promoting' | 'whiteWins' | 'blackWins';
   movesList: string[];
+  castleDirection: {
+    w: string;
+    b: string;
+  };
 }
 
 export type Turn = 'white' | 'black';
@@ -19,6 +23,7 @@ export type Turn = 'white' | 'black';
 import { STATUS } from '@/core/constants/init-game-state';
 import { turns } from '@/core/constants/turns';
 import React from 'react';
+import actionTypes from '../reducer/actionTypes';
 
 export interface MoveAction {
   position: string[][][];
@@ -38,6 +43,16 @@ export interface ClearCandidateMovesAction {
 export interface CandidateMovesAction {
   candidateMoves: number[][];
 }
+
+export type UpdateCastlingAction = {
+  type: typeof actionTypes.UPDATE_CASTLING;
+  payload: {
+    castleDirection: {
+      w: string;
+      b: string;
+    };
+  };
+};
 
 export interface PromotionPayload {
   rank: number;
@@ -71,7 +86,8 @@ export type Action =
   | GenerateCandidateMovesAction
   | ClearCandidateMovesAction
   | PromotionOpenAction
-  | PromotionCloseAction;
+  | PromotionCloseAction
+  | UpdateCastlingAction
 
 export interface ContextType {
   state: State;
@@ -85,9 +101,10 @@ const AppContext = React.createContext<ContextType>({
     candidateMoves: [],
     promotionSquare: { x: 7, y: 7, rank: 7, file: 7 },
     status: STATUS.ONGOING as 'onGoing',
-    movesList: []
+    movesList: [],
+    castleDirection: { w: 'both', b: 'both' }
   },
-  dispatch: () => {}
+  dispatch: () => { }
 });
 
 export const useAppContext = () => {
