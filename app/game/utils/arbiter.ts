@@ -1,3 +1,4 @@
+import { IMoveParams } from '../interfaces/IMoveParams';
 import {
   getBishopMoves,
   getKingMoves,
