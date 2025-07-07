@@ -6,8 +6,8 @@ import {
   State
 } from '@/core/contexts/Context';
 import actionTypes from './actionTypes';
-import { turns } from '@/constants/turns';
-import { STATUS } from '@/constants/init-game-state';
+import { turns } from '@/core/constants/turns';
+import { STATUS } from '@/core/constants/init-game-state';
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {

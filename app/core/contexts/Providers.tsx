@@ -2,7 +2,7 @@
 import React, { useReducer, useMemo } from 'react';
 import AppContext, { State } from './Context';
 import { reducer } from '../reducer/reducer';
-import { initGameState } from '@/constants/init-game-state';
+import { initGameState } from '@/core/constants/init-game-state';
 
 export default function Providers({
   children

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { STATUS } from '@/constants/init-game-state';
+import { STATUS } from '@/core/constants/init-game-state';
 import '../../styles/popup.css';
 import { useAppContext } from '@/core/contexts/Context';
 import { closePopup } from '@/core/reducer/actions/popup';

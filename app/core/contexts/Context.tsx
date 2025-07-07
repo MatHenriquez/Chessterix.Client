@@ -16,8 +16,8 @@ export interface State {
 
 export type Turn = 'white' | 'black';
 
-import { STATUS } from '@/constants/init-game-state';
-import { turns } from '@/constants/turns';
+import { STATUS } from '@/core/constants/init-game-state';
+import { turns } from '@/core/constants/turns';
 import React from 'react';
 
 export interface MoveAction {
