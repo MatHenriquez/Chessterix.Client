@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import React from 'react';
 import localfont from 'next/font/local';
-import Providers from './contexts/Providers';
+import Providers from './core/contexts/Providers';
 
 const stranger = localfont({
   src: [

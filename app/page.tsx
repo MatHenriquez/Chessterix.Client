@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Landing from './components/Landing';
+import Landing from './core/components/landing/Landing';
 
 export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
