@@ -7,7 +7,6 @@ import {
   getQueenMoves,
   getRookMoves
 } from './getMoves';
-import { IMoveParams } from '../../interfaces/IMoveParams';
 import { movePawn, movePiece } from './movePawn';
 
 const arbiter = {
