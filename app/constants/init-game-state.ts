@@ -1,4 +1,4 @@
-import { createInitialPosition } from '@/board/helpers/position';
+import { createInitialPosition } from '@/game/helpers/position';
 import { turns } from './turns';
 
 export const STATUS = {
