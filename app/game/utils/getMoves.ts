@@ -430,49 +430,32 @@ export const getCastlingMoves = ({
   return moves;
 };
 
-export const getCastlingDirections = ({
-  castleDirection,
-  piece,
-  file,
-  rank
-}: {
-  castleDirection: { [key: string]: string };
-  piece: string;
-  file: number | string;
-  rank: number | string;
-}) => {
-  file = Number(file);
-  rank = Number(rank);
-  const direction = castleDirection[piece[0]];
-  if (piece.endsWith('k')) return 'none';
+export const getKingPosition = (
+  position: string[][],
+  player: string
+): [number, number] | null => {
+  let playerPrefix: string;
 
-  if (file === 0 && rank === 0) {
-    if (direction === 'both') return 'right';
-    if (direction === 'left') return 'none';
+  if (player === 'white' || player === 'w') {
+    playerPrefix = 'w';
+  } else if (player === 'black' || player === 'b') {
+    playerPrefix = 'b';
+  } else {
+    console.error('Invalid player format:', player);
+    return null;
   }
-  if (file === 7 && rank === 0) {
-    if (direction === 'both') return 'left';
-    if (direction === 'right') return 'none';
-  }
-  if (file === 0 && rank === 7) {
-    if (direction === 'both') return 'right';
-    if (direction === 'left') return 'none';
-  }
-  if (file === 7 && rank === 7) {
-    if (direction === 'both') return 'left';
-    if (direction === 'right') return 'none';
-  }
-};
 
-export const getKingPosition = (position: string[][], player: string) => {
-  let kingPos;
-  position.forEach((rank, x) => {
-    rank.forEach((file, y) => {
-      if (position[x][y].startsWith(player) && position[x][y].endsWith('k'))
-        kingPos = [x, y];
-    });
-  });
-  return kingPos;
+  for (let x = 0; x < position.length; x++) {
+    for (let y = 0; y < position[x].length; y++) {
+      const piece = position[x][y];
+
+      if (piece.startsWith(playerPrefix) && piece.endsWith('k')) {
+        return [x, y];
+      }
+    }
+  }
+
+  return null;
 };
 
 export const getPieces = (position: string[][], enemy: string) => {
@@ -487,5 +470,6 @@ export const getPieces = (position: string[][], enemy: string) => {
         });
     });
   });
+
   return enemyPieces;
 };
