@@ -74,7 +74,7 @@
   width: var(--tile-size);
   height: var(--tile-size);
   background: var(--check);
-  border-radius: 20px;
+  border-radius: 2.5rem;
   left: 0;
   top: 0;
 }

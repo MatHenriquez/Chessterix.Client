@@ -114,7 +114,17 @@ const arbiter = {
     player: string;
   }) {
     const enemy = player.startsWith('w') ? 'b' : 'w';
+
     const kingPos = getKingPosition(positionAfterMove, player);
+
+    if (!kingPos) {
+      return false;
+    }
+
+    if (!kingPos) {
+      return false;
+    }
+
     const enemyPieces = getPieces(positionAfterMove, enemy);
 
     const enemyMoves = enemyPieces.reduce(
@@ -135,7 +145,6 @@ const arbiter = {
       [] as [number, number][]
     );
 
-    if (!kingPos) return false;
     return enemyMoves.some(([x, y]) => kingPos[0] === x && kingPos[1] === y);
   }
 };

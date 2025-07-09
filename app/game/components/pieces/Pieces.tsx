@@ -6,14 +6,47 @@ import { useAppContext } from '@/core/contexts/Context';
 import { openPromotion } from '@/core/reducer/actions/popup';
 import { clearCandidateMoves, makeNewMove } from '@/core/reducer/actions/move';
 import arbiter from '@/game/utils/arbiter';
-
+import { updateCastling } from '@/core/reducer/actions/game';
 
 const Pieces: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
-
   const { state, dispatch } = useAppContext();
-
   const currentPosition = state.position[state.position.length - 1];
+
+  const updateCastlingState = ({
+    piece,
+    file,
+    rank,
+  }: { piece: string; file: number; rank: number }) => {
+    const currentCastleDirection = state.castleDirection;
+    const kingColor = piece.startsWith('w') ? 'w' : 'b';
+    let newDirection = currentCastleDirection[kingColor];
+
+    if (piece.endsWith('k')) {
+      newDirection = 'none';
+    }
+    else if (piece === 'wr' && file === 0 && rank === 0) {
+      newDirection = newDirection === 'both' ? 'right' : 'none';
+    }
+    else if (piece === 'wr' && file === 7 && rank === 0) {
+      newDirection = newDirection === 'both' ? 'left' : 'none';
+    }
+    else if (piece === 'br' && file === 0 && rank === 7) {
+      newDirection = newDirection === 'both' ? 'right' : 'none';
+    }
+    else if (piece === 'br' && file === 7 && rank === 7) {
+      newDirection = newDirection === 'both' ? 'left' : 'none';
+    }
+
+    if (newDirection !== currentCastleDirection[kingColor]) {
+      const newCastleDirection = {
+        ...currentCastleDirection,
+        [kingColor]: newDirection
+      };
+      
+      dispatch(updateCastling(newCastleDirection));
+    }
+  }
 
   const openPromotionBox = ({
     rank,
@@ -52,9 +85,9 @@ const Pieces: FC = () => {
     return [y, x];
   };
 
+
   const move = (e: React.DragEvent<HTMLDivElement>) => {
     const [rankIndex, fileIndex] = calculateCoordinates(e);
-
     const [piece, rankStr, fileStr] = e.dataTransfer.getData('text').split(',');
     const rank = Number(rankStr);
     const file = Number(fileStr);
@@ -64,6 +97,10 @@ const Pieces: FC = () => {
     );
 
     if (isValidMove) {
+      if (piece.endsWith('r') || piece.endsWith('k')) {
+        updateCastlingState({ piece, file, rank });
+      }
+
       const isPawnPromotion = (piece === 'wp' && rankIndex === 7) ||
         (piece === 'bp' && rankIndex === 0);
 
