@@ -6,7 +6,7 @@ import { useAppContext } from '@/core/contexts/Context';
 import { openPromotion } from '@/core/reducer/actions/popup';
 import { clearCandidateMoves, makeNewMove } from '@/core/reducer/actions/move';
 import arbiter from '@/game/utils/arbiter';
-import { updateCastling } from '@/core/reducer/actions/game'; // ✅ Agregar esta importación
+import { updateCastling } from '@/core/reducer/actions/game';
 
 const Pieces: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
