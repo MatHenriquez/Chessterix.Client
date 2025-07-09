@@ -8,6 +8,8 @@ import PromotionBox from '../promotion/PromotionBox';
 import Files from './Files';
 import Ranks from './Ranks';
 import { useAppContext } from '@/core/contexts/Context';
+import arbiter from '@/game/utils/arbiter';
+import { getKingPosition } from '@/game/utils/getMoves';
 
 
 const Board = () => {
@@ -24,20 +26,48 @@ const Board = () => {
     .fill(0)
     .map((_, index: number) => index + 1);
 
-  const getClassName = (rank: number, file: number) => {
-    let className = 'tile';
-    className += (rank + file) % 2 === 0 ? ' tile--dark' : ' tile--light';
-
-    if (state.candidateMoves?.find((m) => m[0] === rank && m[1] === file)) {
-      if (position[rank]?.[file]) {
-        className += ' attacking';
-      } else {
-        className += ' highlight';
-      }
+  const checkTile = (() => {
+    let playerCode;
+    if (state.turn === 'white') {
+      playerCode = 'w';
+    } else if (state.turn === 'black') {
+      playerCode = 'b';
+    } else {
+      playerCode = state.turn;
     }
 
-    return className;
-  };
+    const isInCheck = arbiter.isPlayerInCheck({
+      positionAfterMove: position,
+      position: position,
+      player: playerCode
+    });
+
+    if (isInCheck) {
+      const kingPosition = getKingPosition(position, playerCode);
+      return kingPosition;
+    }
+
+    return null;
+  })();
+
+const getClassName = (rank: number, file: number) => {
+  let className = 'tile';
+  className += (rank + file) % 2 === 0 ? ' tile--dark' : ' tile--light';
+
+  if (checkTile && checkTile[0] === rank && checkTile[1] === file) {
+    className += ' checked';
+  }
+
+  if (state.candidateMoves?.find((m) => m[0] === rank && m[1] === file)) {
+    if (position[rank]?.[file]) {
+      className += ' attacking';
+    } else {
+      className += ' highlight';
+    }
+  }
+
+  return className;
+};
 
   return (
     <div className="board">
