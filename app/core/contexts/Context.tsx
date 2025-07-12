@@ -18,7 +18,6 @@ export interface State {
   };
   fiftyMoveCounter: number;
   positionHistory: string[];
-  
 }
 
 export type Turn = 'white' | 'black';
