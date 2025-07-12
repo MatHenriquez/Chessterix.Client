@@ -235,6 +235,10 @@ const arbiter = {
     return isInCheck && moves.length === 0;
   },
 
+    positionToString: function (position: string[][]): string {
+    return position.map(row => row.join(',')).join(';');
+  },
+
   isThreefoldRepetition: function (positionHistory: string[]) {
     if (positionHistory.length < 3) return false;
     
