@@ -6,7 +6,8 @@ import { useAppContext } from '@/core/contexts/Context';
 import { openPromotion } from '@/core/reducer/actions/popup';
 import { clearCandidateMoves, makeNewMove } from '@/core/reducer/actions/move';
 import arbiter from '@/game/utils/arbiter';
-import { updateCastling } from '@/core/reducer/actions/game';
+import { detectCheckmate, detectFiftyMoveRule, detectInsufficientMaterial, detectStalemate, detectThreefoldRepetition, updateCastling } from '@/core/reducer/actions/game';
+import { getNewMoveNotation } from '@/game/helpers/position';
 
 const Pieces: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ const Pieces: FC = () => {
         ...currentCastleDirection,
         [kingColor]: newDirection
       };
-      
+
       dispatch(updateCastling(newCastleDirection));
     }
   }
@@ -116,21 +117,57 @@ const Pieces: FC = () => {
       }
 
       const newPosition = arbiter.performMove({
-        position: currentPosition,
-        piece,
-        rank,
-        file,
-        x: rankIndex,
-        y: fileIndex
-      });
+      position: currentPosition,
+      piece, rank, file,
+      x: rankIndex, y: fileIndex
+    });
+    
+    const newMove = getNewMoveNotation({
+      piece,
+      rank,
+      file,
+      x: rankIndex,
+      y: fileIndex,
+      position: currentPosition,
+    });
 
-      const newMove = `${piece}${String.fromCharCode(97 + file)}${rank + 1
-        }-${String.fromCharCode(97 + fileIndex)}${rankIndex + 1}`;
+    // Verificar si el movimiento resetea el contador de 50 movimientos
+    const resetFiftyMove = piece.endsWith('p') || 
+      (currentPosition[rankIndex][fileIndex] !== '');
 
-      dispatch(makeNewMove({ newPosition: [newPosition], newMove }));
+    dispatch(makeNewMove({ 
+      newPosition: [newPosition], 
+      newMove,
+      resetFiftyMoveCounter: resetFiftyMove
+    }));
+
+    const currentColor = piece.startsWith('w') ? 'w' : 'b';
+    const opponent = currentColor === 'w' ? 'b' : 'w';
+    const castleDirection = state.castleDirection;
+
+    // Verificar empate por repetición triple
+    if (arbiter.isThreefoldRepetition(state.positionHistory)) {
+      dispatch(detectThreefoldRepetition());
     }
+    // Verificar regla de 50 movimientos
+    else if (arbiter.isFiftyMoveRule(state.fiftyMoveCounter)) {
+      dispatch(detectFiftyMoveRule());
+    }
+    // Verificar material insuficiente
+    else if (arbiter.insufficientMaterial(newPosition)) {
+      dispatch(detectInsufficientMaterial());
+    }
+    // Verificar ahogado
+    else if (arbiter.isStalemate(newPosition, opponent, castleDirection[opponent])) {
+      dispatch(detectStalemate());
+    }
+    // Verificar jaque mate
+    else if (arbiter.isCheckMate(newPosition, opponent, castleDirection[opponent])) {
+      dispatch(detectCheckmate(currentColor));
+    }
+  }
 
-    dispatch(clearCandidateMoves());
+  dispatch(clearCandidateMoves());
   };
 
   const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
