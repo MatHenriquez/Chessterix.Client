@@ -21,6 +21,23 @@ export const copyPosition = (position: string[][]): string[][] => {
   return newPosition;
 };
 
+export const getCharacter = (file: number) => String.fromCharCode(file + 96);
+
+export const areSameColorTiles = (
+  coords1: { x: number; y: number },
+  coords2: { x: number; y: number }
+) => (coords1.x + coords1.y) % 2 === coords2.x + coords2.y;
+
+export const findPieceCoords = (position: string[][], type: string) => {
+  const results: { x: number; y: number }[] = [];
+  position.forEach((rank, i) => {
+    rank.forEach((pos, j) => {
+      if (pos === type) results.push({ x: i, y: j });
+    });
+  });
+  return results;
+};
+
 export const getNewMoveNotation = ({
   piece,
   rank,
@@ -31,8 +48,8 @@ export const getNewMoveNotation = ({
   promotesTo
 }: {
   piece: string;
-  rank: number;
-  file: number;
+  rank: number | string;
+  file: number | string;
   x: number;
   y: number;
   position: string[][];
@@ -62,5 +79,3 @@ export const getNewMoveNotation = ({
 
   return note;
 };
-
-export const getCharacter = (file: number) => String.fromCharCode(file + 96);
