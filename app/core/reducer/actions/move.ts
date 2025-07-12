@@ -2,16 +2,19 @@ import actionTypes from '../actionTypes';
 
 export const makeNewMove = ({
   newPosition,
-  newMove
+  newMove,
+  resetFiftyMoveCounter = false
 }: {
   newPosition: string[][][];
   newMove: string;
+  resetFiftyMoveCounter: boolean;
 }) => {
   return {
     type: actionTypes.NEW_MOVE,
     payload: {
       position: newPosition,
-      newMove
+      newMove,
+      resetFiftyMoveCounter
     }
   };
 };
