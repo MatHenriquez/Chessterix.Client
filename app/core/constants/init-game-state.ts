@@ -5,8 +5,12 @@ export const STATUS = {
   ONGOING: 'onGoing',
   PROMOTING: 'promoting',
   WHITE_WINS: 'whiteWins',
-  BLACK_WINS: 'blackWins'
-};
+  BLACK_WINS: 'blackWins',
+  STALEMATE: 'stalemate',
+  INSUFFICIENT_MATERIAL: 'insufficient-material',
+  BLACK: 'black',
+  WHITE: 'white'
+} as const;
 
 export const initGameState = {
   position: [createInitialPosition()],
@@ -17,5 +21,7 @@ export const initGameState = {
   castleDirection: {
     w: 'both',
     b: 'both'
-  }
+  },
+  fiftyMoveCounter: 0,
+  positionHistory: [] as string[],
 };

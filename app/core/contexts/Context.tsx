@@ -10,12 +10,14 @@ export interface State {
     rank: number;
     file: number;
   } | null;
-  status: 'onGoing' | 'promoting' | 'whiteWins' | 'blackWins';
+  status: 'onGoing' | 'promoting' | 'whiteWins' | 'blackWins' | 'stalemate' | 'insufficient-material' | 'threefold-repetition' | 'fifty-move-rule' | 'black' | 'white';
   movesList: string[];
   castleDirection: {
     w: string;
     b: string;
   };
+  fiftyMoveCounter: number;
+  positionHistory: string[];
 }
 
 export type Turn = 'white' | 'black';
@@ -28,6 +30,7 @@ import actionTypes from '../reducer/actionTypes';
 export interface MoveAction {
   position: string[][][];
   newMove: string;
+  resetFiftyMoveCounter?: boolean;
 }
 
 export interface NewMoveAction {
@@ -45,7 +48,7 @@ export interface CandidateMovesAction {
 }
 
 export type UpdateCastlingAction = {
-  type: typeof actionTypes.UPDATE_CASTLING;
+  type: typeof actionTypes.CAN_CASTLE;
   payload: {
     castleDirection: {
       w: string;
@@ -76,7 +79,24 @@ export interface PromotionOpenAction {
   payload: PromotionPayload;
 }
 
+export interface CheckmateAction {
+  type: string;
+  payload: {
+    winner: string;
+  };
+}
+
 export interface PromotionCloseAction {
+  type: string;
+  payload: null;
+}
+
+export interface ThreefoldRepetitionAction {
+  type: string;
+  payload: null;
+}
+
+export interface FiftyMoveRuleAction {
   type: string;
   payload: null;
 }
@@ -87,7 +107,10 @@ export type Action =
   | ClearCandidateMovesAction
   | PromotionOpenAction
   | PromotionCloseAction
+  | CheckmateAction
   | UpdateCastlingAction
+  | ThreefoldRepetitionAction
+  | FiftyMoveRuleAction
 
 export interface ContextType {
   state: State;
@@ -102,7 +125,9 @@ const AppContext = React.createContext<ContextType>({
     promotionSquare: { x: 7, y: 7, rank: 7, file: 7 },
     status: STATUS.ONGOING as 'onGoing',
     movesList: [],
-    castleDirection: { w: 'both', b: 'both' }
+    castleDirection: { w: 'both', b: 'both' },
+    fiftyMoveCounter: 0,
+    positionHistory: []
   },
   dispatch: () => { }
 });

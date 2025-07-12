@@ -13,7 +13,9 @@ export default function Providers({
     promotionSquare: null,
     status: 'onGoing',
     movesList: [],
-    castleDirection: { w: 'both', b: 'both' }
+    castleDirection: { w: 'both', b: 'both' },
+    fiftyMoveCounter: 0,
+    positionHistory: []
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);

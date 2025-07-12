@@ -6,7 +6,8 @@ import { useAppContext } from '@/core/contexts/Context';
 import { openPromotion } from '@/core/reducer/actions/popup';
 import { clearCandidateMoves, makeNewMove } from '@/core/reducer/actions/move';
 import arbiter from '@/game/utils/arbiter';
-import { updateCastling } from '@/core/reducer/actions/game';
+import { detectCheckmate, detectFiftyMoveRule, detectInsufficientMaterial, detectStalemate, detectThreefoldRepetition, updateCastling } from '@/core/reducer/actions/game';
+import { getNewMoveNotation } from '@/game/helpers/position';
 
 const Pieces: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ const Pieces: FC = () => {
         ...currentCastleDirection,
         [kingColor]: newDirection
       };
-      
+
       dispatch(updateCastling(newCastleDirection));
     }
   }
@@ -85,7 +86,6 @@ const Pieces: FC = () => {
     return [y, x];
   };
 
-
   const move = (e: React.DragEvent<HTMLDivElement>) => {
     const [rankIndex, fileIndex] = calculateCoordinates(e);
     const [piece, rankStr, fileStr] = e.dataTransfer.getData('text').split(',');
@@ -97,37 +97,64 @@ const Pieces: FC = () => {
     );
 
     if (isValidMove) {
-      if (piece.endsWith('r') || piece.endsWith('k')) {
-        updateCastlingState({ piece, file, rank });
-      }
-
-      const isPawnPromotion = (piece === 'wp' && rankIndex === 7) ||
-        (piece === 'bp' && rankIndex === 0);
-
-      if (isPawnPromotion) {
+      if (piece.endsWith('p') && (rankIndex === 0 || rankIndex === 7)) {
         openPromotionBox({
           rank,
           file,
           x: rankIndex,
           y: fileIndex
         });
-        dispatch(clearCandidateMoves());
         return;
       }
 
+      updateCastlingState({ piece, file, rank });
+
       const newPosition = arbiter.performMove({
         position: currentPosition,
+        piece, rank, file,
+        x: rankIndex, y: fileIndex
+      });
+
+      const newMove = getNewMoveNotation({
         piece,
         rank,
         file,
         x: rankIndex,
-        y: fileIndex
+        y: fileIndex,
+        position: currentPosition,
       });
 
-      const newMove = `${piece}${String.fromCharCode(97 + file)}${rank + 1
-        }-${String.fromCharCode(97 + fileIndex)}${rankIndex + 1}`;
+      const resetFiftyMove = piece.endsWith('p') ||
+        (currentPosition[rankIndex][fileIndex] !== '');
 
-      dispatch(makeNewMove({ newPosition: [newPosition], newMove }));
+
+      const newFiftyMoveCounter = resetFiftyMove ? 0 : state.fiftyMoveCounter + 1;
+
+      dispatch(makeNewMove({
+        newPosition: [newPosition],
+        newMove,
+        resetFiftyMoveCounter: resetFiftyMove
+      }));
+
+      const currentColor = piece.startsWith('w') ? 'w' : 'b';
+      const opponent = currentColor === 'w' ? 'b' : 'w';
+      const castleDirection = state.castleDirection;
+
+      if (newFiftyMoveCounter >= 100) {
+        dispatch(detectFiftyMoveRule());
+      }
+      else if (arbiter.isThreefoldRepetition([...state.positionHistory, arbiter.positionToString(newPosition)])) {
+        dispatch(detectThreefoldRepetition());
+      }
+      else if (arbiter.insufficientMaterial(newPosition)) {
+        dispatch(detectInsufficientMaterial());
+      }
+      else if (arbiter.isStalemate(newPosition, opponent, castleDirection[opponent])) {
+        dispatch(detectStalemate());
+      }
+      else if (arbiter.isCheckMate(newPosition, opponent, castleDirection[opponent])) {
+        dispatch(detectCheckmate(currentColor));
+      }
     }
 
     dispatch(clearCandidateMoves());

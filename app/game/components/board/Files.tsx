@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import '../../styles/board.css';
+import '../../styles/files.css';
 import { getFileCharacters } from '@/game/helpers/get-file-characters';
 
 type FilesProps = {

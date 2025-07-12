@@ -32,7 +32,7 @@ const PromotionBox = ({ onClosePopup }: PromotionBoxProps) => {
     });
     dispatch(clearCandidateMoves());
 
-    dispatch(makeNewMove({ newPosition: [newPosition], newMove }));
+    dispatch(makeNewMove({ newPosition: [newPosition], newMove, resetFiftyMoveCounter: true }));
   };
 
   return (
