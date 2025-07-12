@@ -19,7 +19,7 @@ const Popup = ({ children }: PopupProps) => {
     dispatch(closePopup());
   };
 
-  if (state.status !== STATUS.PROMOTING) {
+  if (state.status == STATUS.ONGOING) {
     return null;
   }
 
