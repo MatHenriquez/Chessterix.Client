@@ -15,7 +15,8 @@ export default function Providers({
     movesList: [],
     castleDirection: { w: 'both', b: 'both' },
     fiftyMoveCounter: 0,
-    positionHistory: []
+    positionHistory: [],
+    currentMoveIndex: 0
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -29,6 +30,6 @@ export default function Providers({
   );
 
   return (
-    <AppContext.Provider value={providerState} > {children}</AppContext.Provider >
+    <AppContext.Provider value={providerState}> {children}</AppContext.Provider >
   );
 }

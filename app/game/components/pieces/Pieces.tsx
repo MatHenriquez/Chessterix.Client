@@ -12,7 +12,9 @@ import { getNewMoveNotation } from '@/game/helpers/position';
 const Pieces: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { state, dispatch } = useAppContext();
-  const currentPosition = state.position[state.position.length - 1];
+  const currentIndex = state.currentMoveIndex ?? state.position.length - 1;
+  const currentPosition = state.position[currentIndex];
+  const isViewingHistory = currentIndex < state.position.length - 1;
 
   const updateCastlingState = ({
     piece,
@@ -87,6 +89,11 @@ const Pieces: FC = () => {
   };
 
   const move = (e: React.DragEvent<HTMLDivElement>) => {
+    if (isViewingHistory) {
+      dispatch(clearCandidateMoves());
+      return;
+    }
+
     const [rankIndex, fileIndex] = calculateCoordinates(e);
     const [piece, rankStr, fileStr] = e.dataTransfer.getData('text').split(',');
     const rank = Number(rankStr);

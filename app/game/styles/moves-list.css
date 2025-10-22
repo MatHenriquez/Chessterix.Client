@@ -1,0 +1,47 @@
+.moves-list {
+    display: flex;
+    flex-direction: column;
+    color: var(--dark-tile);
+    flex: 1 1;
+    overflow: auto;
+    font-size: 1.2em;
+    width: 100%;
+    max-width: 100%;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .moves-list {
+        max-width: 100%;
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .moves-list {
+        max-width: 100%;
+        font-size: 1.05em;
+    }
+}
+
+.moves-list .move-row {
+    display: grid;
+    grid-template-columns: 30px 1fr 1fr;
+    gap: 4px;
+    padding: 4px 4px;
+    align-items: center;
+    text-align: left;
+}
+
+.moves-list .move-number {
+    font-weight: bold;
+    text-align: right;
+}
+
+.moves-list .white-move {
+    padding-left: 4px;
+}
+
+.moves-list .black-move {
+    padding-left: 4px;
+}

@@ -17,7 +17,8 @@ const Board = () => {
   const ROWS_AND_COLUMNS_NUMBER = 8;
 
   const { state } = useAppContext();
-  const position = state.position[state.position.length - 1];
+  const currentIndex = state.currentMoveIndex ?? state.position.length - 1;
+  const position = state.position[currentIndex];
 
   const ranks = Array(ROWS_AND_COLUMNS_NUMBER)
     .fill(0)

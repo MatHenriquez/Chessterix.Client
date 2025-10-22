@@ -12,6 +12,7 @@ const actionTypes = {
   WIN: 'WIN',
   NEW_GAME: 'NEW_GAME',
   TAKE_BACK: 'TAKE_BACK',
+  GO_FORWARD: 'GO_FORWARD',
 };
 
 export default actionTypes;

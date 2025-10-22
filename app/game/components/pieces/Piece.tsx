@@ -14,9 +14,16 @@ const Piece: FC<PieceProps> = ({ piece, fileIndex, rank }) => {
   const { state, dispatch } = useAppContext();
   const { turn, position, castleDirection } = state;
 
-  const currentPosition = position[position.length - 1];
+  const currentIndex = state.currentMoveIndex ?? position.length - 1;
+  const currentPosition = position[currentIndex];
+  const isViewingHistory = currentIndex < position.length - 1;
 
   const onDragStart = (e: DragEvent) => {
+    if (isViewingHistory) {
+      e.preventDefault();
+      return;
+    }
+
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', `${piece},${rank},${fileIndex}`);
     setTimeout(() => {
@@ -26,7 +33,7 @@ const Piece: FC<PieceProps> = ({ piece, fileIndex, rank }) => {
     if (turn.startsWith(piece[0])) {
       const candidateMoves = arbiter.getValidMoves({
         position: currentPosition,
-        prevPosition: position[position.length - 2],
+        prevPosition: position[currentIndex - 1],
         castleDirection: castleDirection[turn[0] as 'w' | 'b'],
         piece,
         file: fileIndex,
@@ -44,7 +51,7 @@ const Piece: FC<PieceProps> = ({ piece, fileIndex, rank }) => {
   return (
     <div
       className={`piece ${piece} p-${fileIndex}${rank}`}
-      draggable={true}
+      draggable={!isViewingHistory}
       onDragStart={(e) => onDragStart(e)}
       onDragEnd={(e) => onDragEnd(e)}
     ></div>

@@ -24,4 +24,5 @@ export const initGameState = {
   },
   fiftyMoveCounter: 0,
   positionHistory: [] as string[],
+  currentMoveIndex: 0,
 };
