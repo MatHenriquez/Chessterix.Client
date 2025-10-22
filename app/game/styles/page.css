@@ -24,6 +24,7 @@
 
 .board-container {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 30px 30px 10px 10px;
@@ -48,14 +49,18 @@
 
 @media (max-width: 768px) {
   .board-container {
-    padding: 10px;
-    transform: scale(0.9);
+    flex-direction: column;
+    padding: 20px;
+    transform: scale(0.95);
+    width: auto;
   }
 }
 
 @media (max-width: 480px) {
   .board-container {
-    padding: 5px;
-    transform: scale(0.85);
+    flex-direction: column;
+    padding: 15px;
+    transform: scale(0.9);
+    width: auto;
   }
 }
