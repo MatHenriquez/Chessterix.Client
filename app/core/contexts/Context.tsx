@@ -18,6 +18,7 @@ export interface State {
   };
   fiftyMoveCounter: number;
   positionHistory: string[];
+  currentMoveIndex?: number;
 }
 
 export type Turn = 'white' | 'black';
@@ -101,6 +102,11 @@ export interface FiftyMoveRuleAction {
   payload: null;
 }
 
+export interface TakeBackAction { 
+  type: string,
+  payload: undefined
+}
+
 export type Action =
   | NewMoveAction
   | GenerateCandidateMovesAction
@@ -111,6 +117,7 @@ export type Action =
   | UpdateCastlingAction
   | ThreefoldRepetitionAction
   | FiftyMoveRuleAction
+  | TakeBackAction
 
 export interface ContextType {
   state: State;

@@ -36,3 +36,17 @@ export const clearCandidateMoves = () => {
     }
   };
 };
+
+export const takeBack = () => {
+  return {
+    type: actionTypes.TAKE_BACK,
+    payload: undefined
+  };
+};
+
+export const goForward = () => {
+  return {
+    type: actionTypes.GO_FORWARD,
+    payload: undefined
+  };
+};

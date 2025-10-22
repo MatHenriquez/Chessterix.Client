@@ -70,7 +70,8 @@ function reducer(state: State, action: Action): State {
         candidateMoves: [],
         movesList: updatedMovesList,
         fiftyMoveCounter,
-        positionHistory
+        positionHistory,
+        currentMoveIndex: position.length - 1
       };
     }
 
@@ -162,24 +163,33 @@ function reducer(state: State, action: Action): State {
     }
 
     case actionTypes.TAKE_BACK: {
-      let { position, movesList, turn, fiftyMoveCounter, positionHistory } = state;
-      if (position.length > 1) {
-        position = position.slice(0, position.length - 1);
-        movesList = movesList.slice(0, movesList.length - 1);
-        turn = turn.startsWith('w') ? 'black' : 'white';
+      const { position, currentMoveIndex = position.length - 1 } = state;
+      
+      if (currentMoveIndex > 0) {
+        const newIndex = currentMoveIndex - 1;
         
-        fiftyMoveCounter = 0;
-        positionHistory = positionHistory.slice(0, -1);
+        return {
+          ...state,
+          currentMoveIndex: newIndex
+        };
       }
 
-      return {
-        ...state,
-        position,
-        movesList,
-        turn,
-        fiftyMoveCounter,
-        positionHistory
-      };
+      return state;
+    }
+
+    case actionTypes.GO_FORWARD: {
+      const { position, currentMoveIndex = position.length - 1 } = state;
+      
+      if (currentMoveIndex < position.length - 1) {
+        const newIndex = currentMoveIndex + 1;
+        
+        return {
+          ...state,
+          currentMoveIndex: newIndex
+        };
+      }
+
+      return state;
     }
 
     default:
