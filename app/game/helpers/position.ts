@@ -45,7 +45,9 @@ export const getNewMoveNotation = ({
   x,
   y,
   position,
-  promotesTo
+  promotesTo,
+  isCheck,
+  isCheckmate
 }: {
   piece: string;
   rank: number | string;
@@ -54,28 +56,33 @@ export const getNewMoveNotation = ({
   y: number;
   position: string[][];
   promotesTo?: string;
+  isCheck: boolean;
+  isCheckmate: boolean;
 }) => {
   let note = '';
 
   rank = Number(rank);
   file = Number(file);
   if (piece[1] === 'k' && Math.abs(file - y) === 2) {
-    if (file < y) return 'O-O';
-    else return 'O-O-O';
-  }
-
-  if (piece[1] !== 'p') {
-    note += piece[1].toUpperCase();
-    if (position[x][y]) {
-      note += 'x';
+    if (file < y) note = 'O-O';
+    else note = 'O-O-O';
+  } else {
+    if (piece[1] !== 'p') {
+      note += piece[1].toUpperCase();
+      if (position[x][y]) {
+        note += 'x';
+      }
+    } else if (rank !== x && file !== y) {
+      note += getCharacter(file + 1) + 'x';
     }
-  } else if (rank !== x && file !== y) {
-    note += getCharacter(file + 1) + 'x';
+
+    note += getCharacter(y + 1) + (x + 1);
+
+    if (promotesTo) note += '=' + promotesTo.toUpperCase();
   }
 
-  note += getCharacter(y + 1) + (x + 1);
-
-  if (promotesTo) note += '=' + promotesTo.toUpperCase();
+  if (isCheckmate) note += '#';
+  else if (isCheck) note += '+';
 
   return note;
 };

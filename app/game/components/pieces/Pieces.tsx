@@ -122,6 +122,9 @@ const Pieces: FC = () => {
         x: rankIndex, y: fileIndex
       });
 
+      const currentColor = piece.startsWith('w') ? 'w' : 'b';
+      const opponent = currentColor === 'w' ? 'b' : 'w';
+
       const newMove = getNewMoveNotation({
         piece,
         rank,
@@ -129,11 +132,12 @@ const Pieces: FC = () => {
         x: rankIndex,
         y: fileIndex,
         position: currentPosition,
+        isCheck: arbiter.isPlayerInCheck({ positionAfterMove: newPosition, position: currentPosition, player: opponent }),
+        isCheckmate: arbiter.isCheckMate(newPosition, opponent, state.castleDirection[opponent])
       });
 
       const resetFiftyMove = piece.endsWith('p') ||
         (currentPosition[rankIndex][fileIndex] !== '');
-
 
       const newFiftyMoveCounter = resetFiftyMove ? 0 : state.fiftyMoveCounter + 1;
 
@@ -143,8 +147,6 @@ const Pieces: FC = () => {
         resetFiftyMoveCounter: resetFiftyMove
       }));
 
-      const currentColor = piece.startsWith('w') ? 'w' : 'b';
-      const opponent = currentColor === 'w' ? 'b' : 'w';
       const castleDirection = state.castleDirection;
 
       if (newFiftyMoveCounter >= 100) {
