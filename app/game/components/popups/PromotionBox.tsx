@@ -3,6 +3,8 @@ import { useAppContext } from '@/core/contexts/Context';
 import '../../styles/promotion-box.css';
 import { copyPosition, getNewMoveNotation } from '@/game/helpers/position';
 import { clearCandidateMoves, makeNewMove } from '@/core/reducer/actions/move';
+import arbiter from '@/game/utils/arbiter';
+import { detectCheckmate } from '@/core/reducer/actions/game';
 
 interface PromotionBoxProps {
   onClosePopup: VoidFunction;
@@ -15,24 +17,32 @@ const PromotionBox = ({ onClosePopup }: PromotionBoxProps) => {
   if (!promotionSquare) return null;
 
   const color = promotionSquare.x === 7 ? 'w' : 'b';
+  const opponent = color === 'w' ? 'b' : 'w';
   const options = ['q', 'r', 'b', 'n'];
 
   const onClick = (option: string) => {
     onClosePopup();
-    const newPosition = copyPosition(state.position[state.position.length - 1]);
+    const currentPosition = state.position.at(-1) as string[][];
+    const newPosition = copyPosition(currentPosition);
 
     newPosition[promotionSquare.rank][promotionSquare.file] = '';
     newPosition[promotionSquare.x][promotionSquare.y] = color + option;
 
     const newMove = getNewMoveNotation({
       ...promotionSquare,
-      position: state.position[state.position.length - 1],
+      position: currentPosition,
       promotesTo: option,
-      piece: promotionSquare.x === 7 ? 'wp' : 'bp'
+      piece: promotionSquare.x === 7 ? 'wp' : 'bp',
+      isCheck: arbiter.isPlayerInCheck({ positionAfterMove: newPosition, position: currentPosition, player: opponent }),
+      isCheckmate: arbiter.isCheckMate(newPosition, opponent, state.castleDirection[opponent])
     });
     dispatch(clearCandidateMoves());
 
     dispatch(makeNewMove({ newPosition: [newPosition], newMove, resetFiftyMoveCounter: true }));
+
+    if (arbiter.isCheckMate(newPosition, opponent, state.castleDirection[opponent])) {
+      dispatch(detectCheckmate(color));
+    }
   };
 
   return (
