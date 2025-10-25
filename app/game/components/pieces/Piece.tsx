@@ -49,12 +49,13 @@ const Piece: FC<PieceProps> = ({ piece, fileIndex, rank }) => {
   };
 
   return (
-    <div
+    <button
       className={`piece ${piece} p-${fileIndex}${rank}`}
       draggable={!isViewingHistory}
       onDragStart={(e) => onDragStart(e)}
       onDragEnd={(e) => onDragEnd(e)}
-    ></div>
+      type="button"
+    ></button>
   );
 };
 

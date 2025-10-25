@@ -35,20 +35,21 @@ function reducer(state: State, action: Action): State {
 
       const rawPosition = (action.payload as MoveAction).position;
       let newPositions: string[][][] = [];
-      if (rawPosition !== undefined) {
+
+      if (rawPosition) {
         newPositions = Array.isArray(rawPosition[0]?.[0])
           ? (rawPosition as unknown as string[][][])
           : [rawPosition as unknown as string[][]];
       }
       
-      const oldPosition = position[position.length - 1];
+      const oldPosition = position.at(-1);
       const newPosition = newPositions[0];
       position = [...position, ...newPositions];
 
       const newMove = (action.payload as MoveAction).newMove;
       const resetFiftyMove = (action.payload as MoveAction).resetFiftyMoveCounter;
 
-      if (resetFiftyMove || shouldResetFiftyMoveCounter(oldPosition, newPosition, newMove.charAt(0))) {
+      if (resetFiftyMove || shouldResetFiftyMoveCounter(oldPosition as string[][], newPosition, newMove.charAt(0))) {
         fiftyMoveCounter = 0;
       } else {
         fiftyMoveCounter += 1;
@@ -59,7 +60,7 @@ function reducer(state: State, action: Action): State {
 
       const currentMovesList = movesList || [];
       const updatedMovesList =
-        newMove !== undefined
+        newMove
           ? [...currentMovesList, newMove]
           : currentMovesList;
 
@@ -158,7 +159,8 @@ function reducer(state: State, action: Action): State {
         ...state,
         ...action.payload,
         fiftyMoveCounter: 0,
-        positionHistory: []
+        positionHistory: [],
+        movesList: [],
       };
     }
 

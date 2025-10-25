@@ -88,6 +88,26 @@ const Pieces: FC = () => {
     return [y, x];
   };
 
+  const shouldOpenPromotionBox = (piece: string, rankIndex: number) => piece.endsWith('p') && (rankIndex === 0 || rankIndex === 7);
+
+  const dispatchPossibleEndings = (newFiftyMoveCounter: number, newPosition: string[][], currentColor: string, castleDirection: Record<string, string>, opponent: string) => {
+    if (newFiftyMoveCounter >= 100) {
+      dispatch(detectFiftyMoveRule());
+    }
+    else if (arbiter.isThreefoldRepetition([...state.positionHistory, arbiter.positionToString(newPosition)])) {
+      dispatch(detectThreefoldRepetition());
+    }
+    else if (arbiter.insufficientMaterial(newPosition)) {
+      dispatch(detectInsufficientMaterial());
+    }
+    else if (arbiter.isStalemate(newPosition, opponent, castleDirection[opponent])) {
+      dispatch(detectStalemate());
+    }
+    else if (arbiter.isCheckMate(newPosition, opponent, castleDirection[opponent])) {
+      dispatch(detectCheckmate(currentColor));
+    }
+  }
+
   const move = (e: React.DragEvent<HTMLDivElement>) => {
     if (isViewingHistory) {
       dispatch(clearCandidateMoves());
@@ -104,7 +124,7 @@ const Pieces: FC = () => {
     );
 
     if (isValidMove) {
-      if (piece.endsWith('p') && (rankIndex === 0 || rankIndex === 7)) {
+      if (shouldOpenPromotionBox(piece, rankIndex)) {
         openPromotionBox({
           rank,
           file,
@@ -149,21 +169,7 @@ const Pieces: FC = () => {
 
       const castleDirection = state.castleDirection;
 
-      if (newFiftyMoveCounter >= 100) {
-        dispatch(detectFiftyMoveRule());
-      }
-      else if (arbiter.isThreefoldRepetition([...state.positionHistory, arbiter.positionToString(newPosition)])) {
-        dispatch(detectThreefoldRepetition());
-      }
-      else if (arbiter.insufficientMaterial(newPosition)) {
-        dispatch(detectInsufficientMaterial());
-      }
-      else if (arbiter.isStalemate(newPosition, opponent, castleDirection[opponent])) {
-        dispatch(detectStalemate());
-      }
-      else if (arbiter.isCheckMate(newPosition, opponent, castleDirection[opponent])) {
-        dispatch(detectCheckmate(currentColor));
-      }
+      dispatchPossibleEndings(newFiftyMoveCounter, newPosition, currentColor, castleDirection, opponent);
     }
 
     dispatch(clearCandidateMoves());
