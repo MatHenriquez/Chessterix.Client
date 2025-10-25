@@ -235,16 +235,18 @@ const arbiter = {
     return isInCheck && moves.length === 0;
   },
 
-    positionToString: function (position: string[][]): string {
-    return position.map(row => row.join(',')).join(';');
+  positionToString: function (position: string[][]): string {
+    return position.map((row) => row.join(',')).join(';');
   },
 
   isThreefoldRepetition: function (positionHistory: string[]) {
     if (positionHistory.length < 3) return false;
-    
+
     const currentPosition = positionHistory[positionHistory.length - 1];
-    const occurrences = positionHistory.filter(pos => pos === currentPosition).length;
-    
+    const occurrences = positionHistory.filter(
+      (pos) => pos === currentPosition
+    ).length;
+
     return occurrences >= 3;
   },
 

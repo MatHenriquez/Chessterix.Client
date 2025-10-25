@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, ReactNode } from 'react';
+import React, { useRef, useEffect, useCallback, ReactNode } from 'react';
 
 type ModalProps = {
   isOpen: boolean;
@@ -17,11 +17,11 @@ const Modal = ({
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleOutsideClick = (e: MouseEvent) => {
+  const handleOutsideClick = useCallback((e: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       onClose();
     }
-  };
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -34,7 +34,7 @@ const Modal = ({
       clearTimeout(timeoutId);
       document.removeEventListener('mousedown', handleOutsideClick);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, handleOutsideClick]);
 
   if (!isOpen) return null;
 

@@ -20,11 +20,11 @@ const Board = () => {
   const currentIndex = state.currentMoveIndex ?? state.position.length - 1;
   const position = state.position[currentIndex];
 
-  const ranks = Array(ROWS_AND_COLUMNS_NUMBER)
+  const ranks = new Array(ROWS_AND_COLUMNS_NUMBER)
     .fill(0)
     .map((_, index: number) => ROWS_AND_COLUMNS_NUMBER - index);
 
-  const files = Array(ROWS_AND_COLUMNS_NUMBER)
+  const files = new Array(ROWS_AND_COLUMNS_NUMBER)
     .fill(0)
     .map((_, index: number) => index + 1);
 
