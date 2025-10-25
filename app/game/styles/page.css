@@ -1,5 +1,5 @@
 @import '../../globals.css';
-@import url('https://fonts.googleapis.com/css2?family=Sofia-Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
 .board-container-wrapper {
   display: flex;
@@ -27,6 +27,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  position: relative;
   padding: 30px 30px 10px 10px;
   border-radius: 10px;
   font-family: 'Sofia Sans', sans-serif;
