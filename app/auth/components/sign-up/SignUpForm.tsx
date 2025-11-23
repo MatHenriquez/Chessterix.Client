@@ -10,6 +10,7 @@ import FloatingLabelField from '@/core/components/common/FloatingLabelField';
 
 interface SignUpFormValues {
   email: string;
+  nickname: string;
   password: string;
   repeatPassword: string;
 }
@@ -19,6 +20,7 @@ export const SignUpForm = () => {
 
   const initialValues: SignUpFormValues = {
     email: '',
+    nickname: '',
     password: '',
     repeatPassword: ''
   };
@@ -28,24 +30,27 @@ export const SignUpForm = () => {
 
     setIsLoading(true);
 
-    const email = event.currentTarget.email.value;
-    const password = event.currentTarget.password.value;
+    const email: string = event.currentTarget.email.value.trim();
+    const nickname: string = event.currentTarget.nickname.value.trim();
+    const password: string = event.currentTarget.password.value.trim();
 
     try {
       const { data } = await axiosInstance.post(BackEndLinks.REGISTER, {
         email,
-        password
+        password,
+        nickname
       });
 
-      const jwt = data.data.token;
-      localStorage.setItem('jwt', jwt);
-
       setIsLoading(false);
-      toast.success('Success!');
 
-      setTimeout(() => {
-        window.location.href = '/home';
-      }, 3000);
+      if (data.isSuccess) {
+        toast.success('Success!');
+      }
+      else {
+        toast.error('Error! Please try again.');
+        return;
+      }
+
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -67,6 +72,10 @@ export const SignUpForm = () => {
       errors.email = '*Invalid email address';
     }
 
+    if (!values.nickname) {
+      errors.nickname = '*Required';
+    }
+
     if (!values.password) {
       errors.password = '*Required';
     } else if (values.password.length < 8) {
@@ -86,7 +95,7 @@ export const SignUpForm = () => {
       <Formik
         initialValues={initialValues}
         validate={validate}
-        onSubmit={(values, actions) => {
+        onSubmit={(_, actions) => {
           actions.setSubmitting(false);
         }}
       >
@@ -105,6 +114,15 @@ export const SignUpForm = () => {
               id="email"
               data-cy="email-input"
               placeholder="john.doe@mail.com"
+            />
+
+            <FloatingLabelField
+              name="nickname"
+              type="text"
+              label="Nickname"
+              id="nickname"
+              data-cy="nickname-input"
+              placeholder="JohnDoe"
             />
 
             <FloatingLabelField
