@@ -1,4 +1,5 @@
 export enum BackEndLinks {
-  REGISTER = 'auth/register',
-  LOGIN = 'auth/login'
+  REGISTER = 'auth/registration',
+  LOGIN = 'auth/login',
+  EMAIL_VERIFICATION = 'auth/EmailVerification'
 }
