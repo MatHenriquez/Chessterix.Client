@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { Suspense } from 'react';
 import ValidationContainer from './components/ValidationContainer';
 import ValidationCard from './components/ValidationCard';
 import ValidationTitle from './components/ValidationTitle';
@@ -10,7 +10,7 @@ import SuccessState from './components/SuccessState';
 import ErrorState from './components/ErrorState';
 import { useEmailValidation } from './hooks/useEmailValidation';
 
-const EmailValidation: React.FC = () => {
+const EmailValidationContent: React.FC = () => {
     const EMAIL_VALIDATION_TOKEN = "token";
     const searchParams = useSearchParams();
     const validationToken = searchParams.get(EMAIL_VALIDATION_TOKEN);
@@ -31,6 +31,21 @@ const EmailValidation: React.FC = () => {
                 {validationStatus === 'error' && <ErrorState errorMessage={errorMessage} onGoHome={handleGoHome} />}
             </ValidationCard>
         </ValidationContainer>
+    );
+};
+
+const EmailValidation: React.FC = () => {
+    return (
+        <Suspense fallback={
+            <ValidationContainer>
+                <ValidationCard>
+                    <ValidationTitle />
+                    <LoadingState />
+                </ValidationCard>
+            </ValidationContainer>
+        }>
+            <EmailValidationContent />
+        </Suspense>
     );
 };
 
