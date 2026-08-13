@@ -37,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
     "autoprefixer": "^10.4.21",
-    "cypress": "^13.6.1",
+    "cypress": "^15.20.1",
     "eslint": "^10",
     "eslint-config-next": "^15.3.3",
     "eslint-plugin-react": "^7.33.2",
